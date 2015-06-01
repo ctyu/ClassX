@@ -1,5 +1,28 @@
 !(function objectX(host){
-    var labels = ['superClass','extend','private'];
+    var labels = ['statics','superClass','extend','private'],
+        labelProcess = {
+            'superClass' : function(newClass, superClassList){
+                var super;
+                superClassList && superClassList.length && superClassList.forEach(function(superClass){
+                    //statics
+                    objectEach(superClass,function(key, value){
+                        if( !(key in newClass) )
+                            newClass[key] = value
+                    });
+
+                    //prototype
+                })
+            },
+            'extend' : function(obj){
+
+            },
+            'private' : function(private){
+
+            },
+            'statics' : function(){
+
+            }
+        };
     function ObjectX(opts, constructor){
         if(this === host){
             return new ObjectX(opts);
@@ -22,7 +45,7 @@
 
     function creat(host,opts){
         opts || (opts = {});
-
+        host.privateAccessor = new PrivateAccessor();
     }
 
     function ns( name , root ) {
@@ -53,21 +76,25 @@
         }
     }
 
+    /**
+     * 私有变量访问器
+     */
     function PrivateAccessor(){
         this.privateStore = {};
-        if(arguments.length === 1){
-            privateAccessor.get(name);
-        }else{
-            privateAccessor.set(name, value);
+    }
+
+    PrivateAccessor.prototype = {
+        'constructor' : PrivateAccessor,
+        'get' : function(name){
+
+        },
+        'set' : function(name, value){
+
         }
     }
 
-    PrivateAccessor.get = function(name){
-
-    }
-
-    PrivateAccessor.set = function(name, value){
-
-    }
-
+    function objectEach(obj, fn , scope  ) {
+        for (var x in obj)
+            fn.call( scope, x, obj[x] );
+    };
 })(window)
