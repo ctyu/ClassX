@@ -1,6 +1,5 @@
 !(function objectX(host){
-    var labels = ['superClass','extend','private'],
-        privateStore = {};
+    var labels = ['superClass','extend','private'];
     function ObjectX(opts, constructor){
         if(this === host){
             return new ObjectX(opts);
@@ -23,7 +22,7 @@
 
     function creat(host,opts){
         opts || (opts = {});
-        
+
     }
 
     function ns( name , root ) {
@@ -54,7 +53,8 @@
         }
     }
 
-    function privateAccessor(name, value){
+    function PrivateAccessor(){
+        this.privateStore = {};
         if(arguments.length === 1){
             privateAccessor.get(name);
         }else{
@@ -62,11 +62,11 @@
         }
     }
 
-    privateAccessor.get = function(name){
+    PrivateAccessor.get = function(name){
 
     }
 
-    privateAccessor.set = function(name, value){
+    PrivateAccessor.set = function(name, value){
 
     }
 
