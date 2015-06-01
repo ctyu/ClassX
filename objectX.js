@@ -1,20 +1,15 @@
 !(function objectX(host){
-    var labels = ['extend','prototype','private'];
-    function ObjectX(opts){
+    var labels = ['superClass','extend','private'],
+        privateStore = {};
+    function ObjectX(opts, constructor){
         if(this === host){
             return new ObjectX(opts);
         }
-        return creat(opts)
+        return creat.call(this,opts, constructor)
     }
 
     ObjectX.prototype = {
-        'constructor' : ObjectX,
-        'inherit' : function(entity){
-            return entity;
-        },
-        'creatSubClass' : function(opts){
-            return opts
-        }
+        'constructor' : ObjectX
     }
 
     ObjectX.define = function(className, opts){
@@ -23,13 +18,12 @@
             return null;
         }
         var lastIndex = className.lastIndexOf('.');
-        return ns(lastIndex === -1 ? null : className.substr(0, lastIndex))[ className.substr(lastIndex + 1) ] = function(){
-            return new ObjectX(opts);
-        }
+        return ns(lastIndex === -1 ? null : className.substr(0, lastIndex))[ className.substr(lastIndex + 1) ] = new Creator(opts);
     }
 
-    function creat(opts){
+    function creat(host,opts){
         opts || (opts = {});
+        
     }
 
     function ns( name , root ) {
@@ -45,5 +39,35 @@
         return part;
     }
 
+    function Creator(opts){
+        var me = this;
+        me.opts = opts || {};
+        var _objectX = function(){
+            return new ObjectX(me.opts, _objectX);
+        }
+        return _objectX;
+    }
+
+    Creator.prototype = {
+        'inherit' : function(superClass){
+            this.opts.superClass ? this.opts.superClass.push(superClass) : (this.opts.superClass = [superClass])
+        }
+    }
+
+    function privateAccessor(name, value){
+        if(arguments.length === 1){
+            privateAccessor.get(name);
+        }else{
+            privateAccessor.set(name, value);
+        }
+    }
+
+    privateAccessor.get = function(name){
+
+    }
+
+    privateAccessor.set = function(name, value){
+
+    }
 
 })(window)
