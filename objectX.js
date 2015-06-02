@@ -2,8 +2,11 @@
     var labels = ['statics','superClass','extend','private'],
         labelProcess = {
             'superClass' : function(newClass, superClassList){
-                var super;
+                var super,
+                    superClassPrototype,
+                    newClassPrototype = newClass.prototype;
                 superClassList && superClassList.length && superClassList.forEach(function(superClass){
+                    superClassPrototype = superClass.prototype;
                     //statics
                     objectEach(superClass,function(key, value){
                         if( !(key in newClass) )
@@ -11,6 +14,7 @@
                     });
 
                     //prototype
+                    
                 })
             },
             'extend' : function(obj){
@@ -23,11 +27,8 @@
 
             }
         };
-    function ObjectX(opts, constructor){
-        if(this === host){
-            return new ObjectX(opts);
-        }
-        return creat.call(this,opts, constructor)
+    function ObjectX(className, opts){
+        return ObjectX.define(className, opts);
     }
 
     ObjectX.prototype = {
@@ -45,7 +46,7 @@
 
     function creat(host,opts){
         opts || (opts = {});
-        host.privateAccessor = new PrivateAccessor();
+        host.privateAccessor = new PrivateAccessor();//私有变量访问器
     }
 
     function ns( name , root ) {
@@ -65,7 +66,7 @@
         var me = this;
         me.opts = opts || {};
         var _objectX = function(){
-            return new ObjectX(me.opts, _objectX);
+            return creat.call(this, me.opts, _objectX);
         }
         return _objectX;
     }
