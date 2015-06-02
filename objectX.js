@@ -195,4 +195,6 @@
                 fn.call( scope, x, obj[x] );
         }
     }
+
+    host.ObjectX = ObjectX;
 })(window)
