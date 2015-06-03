@@ -15,10 +15,13 @@
                     newClassPrototype[key] = value;
                 });
 
+                //extend
+                labelProcess.extend(newClass, superClass.extendList || [])
+
                 labelProcess.private(newClass,superClass.private)                
             },
             'extend' : function(newClass, extendList){
-                newClass.extendList = extendList;
+                newClass.extendList ? newClass.extendList.push.apply(newClass.extendList,extendList) : (newClass.extendList = extendList);
             },
             'private' : function(newClass,privateValue){
                 privateValue = privateValue || {};
@@ -52,7 +55,7 @@
 
     ObjectX.prototype = {
         'parent' : function(){
-            ObjectX.extend.call(this);
+            ObjectX.parent.call(this);
         },
         'extend' : function(params){
             ObjectX.extend.call(this,params);
