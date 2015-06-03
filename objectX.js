@@ -132,7 +132,7 @@
         opts = opts || {};
         var privateValues;
         var _ObjectX = function(opts){
-            return creat.call(this, opts, _ObjectX.extendList || [], privateValues);
+            return creat.call(this,this, opts, _ObjectX.extendList || [], privateValues);
         }
 
         opts.superClass || (opts.superClass = base);
