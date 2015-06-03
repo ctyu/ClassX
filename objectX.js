@@ -55,7 +55,7 @@
 
     ObjectX.prototype = {
         'parent' : function(){
-            ObjectX.parent.call(this);
+            ObjectX.parent.apply(this,arguments);
         },
         'extend' : function(params){
             ObjectX.extend.call(this,params);
