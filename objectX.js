@@ -1,10 +1,10 @@
 !(function objectX(host){
-    var ver = '$$ObjectX' + Math.random().replace(/\./g,'');
-    var labels = ['statics','superClass','private'],
+    var ver = '$$ObjectX' + Math.random().toString().replace(/\./g,'');
+    var labels = ['statics','superClass','private','extend'],
         labelProcess = {
-            'superClass' : function(newClass, superClass, base){
+            'superClass' : function(newClass, superClass){
                 if(!newClass) return;
-                superClass = superClass || base;
+                superClass = superClass;
                 var newClassPrototype = newClass.prototype,
                     superClassPrototype = superClass.prototype;
                 //statics
@@ -16,6 +16,9 @@
                 });
 
                 labelProcess.private(newClass,superClass.private)                
+            },
+            'extend' : function(newClass, extendList){
+                newClass.extendList = extendList;
             },
             'private' : function(newClass,privateValue){
                 privateValue = privateValue || {};
@@ -49,13 +52,16 @@
 
     ObjectX.prototype = {
         'parent' : function(){
-            ObjectX.parent.call(this);
+            ObjectX.extend.call(this);
         },
         'extend' : function(params){
             ObjectX.extend.call(this,params);
         },
         'initialize' : function(){
 
+        },
+        'destroy' : function(){
+            privateAccessor.destroy(this[ver]);
         }
     }
 
@@ -107,12 +113,18 @@
         return (ns(lastIndex === -1 ? null : className.substr(0, lastIndex))[ className.substr(lastIndex + 1) ] = creator(opts,me));
     }
 
-    function creat(host,opts,privateValue){
+    function creat(host,opts,extendList,privateValue){
         opts || (opts = {});
         host[ver] = privateAccessor.init(privateValue);//私有变量访问器
         host.privateAccessor = function(name,value){
             privateAccessor(this[ver],name,value)
         };
+        if(extendList){
+            extendList.forEach(function(extendItem){
+                host.extend(extendItem);
+            });
+        }
+
         return host.initialize && host.initialize(opts);
     }
 
@@ -120,17 +132,17 @@
         opts = opts || {};
         var privateValues;
         var _ObjectX = function(opts){
-            return creat.call(this, opts, privateValues);
+            return creat.call(this, opts, _ObjectX.extendList, privateValues);
         }
 
-        opts.superClass || (opts.superClass = [base]);
+        opts.superClass || (opts.superClass = base);
 
         var protoMethods = {
             'constructor' : _ObjectX
         }
 
         labels.forEach(function(k){
-            labelProcess[k](_ObjectX, opts[k], base);
+            labelProcess[k](_ObjectX, opts[k]);
         })
 
         objectEach(opts, function(k,v){
@@ -171,6 +183,10 @@
         return id;
     }
 
+    privateAccessor.destroy = function(id){
+        delete privateStore[id];
+    }
+
     function ns( name , root ) {
         var part = root || host,
             parts = name && name.split('.') || [];
@@ -195,6 +211,7 @@
                 fn.call( scope, x, obj[x] );
         }
     }
-
-    host.ObjectX = ObjectX;
+    if(module && module.exports){
+        module.exports = ObjectX;
+    }
 })(window)
