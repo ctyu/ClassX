@@ -4,7 +4,6 @@
         labelProcess = {
             'superClass' : function(newClass, superClass){
                 if(!newClass) return;
-                superClass = superClass;
                 var newClassPrototype = newClass.prototype,
                     superClassPrototype = superClass.prototype;
                 //statics
