@@ -56,8 +56,8 @@
         'parent' : function(){
             ObjectX.parent.apply(this,arguments);
         },
-        'extend' : function(params){
-            ObjectX.extend.call(this,params);
+        'extend' : function(){
+            ObjectX.extend.apply(this,arguments);
         },
         'initialize' : function(){
 
