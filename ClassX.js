@@ -20,7 +20,17 @@
                 labelProcess.private(newClass,superClass.private)                
             },
             'extend' : function(newClass, extendList){
-                newClass.extendList ? newClass.extendList.push.apply(newClass.extendList,extendList) : (newClass.extendList = extendList);
+                if(!extendList) return;
+                if(newClass.extendList){
+                    extendList.forEach(function(extendItem){
+                        if(newClass.extendList.indexOf(extendItem) === -1){
+                            newClass.extendList.push(extendItem);
+                        }
+                    });
+                }else{
+                    newClass.extendList = extendList;
+                }
+                // newClass.extendList ? newClass.extendList.push.apply(newClass.extendList,extendList) : (newClass.extendList = extendList);
             },
             'private' : function(newClass,privateValue){
                 privateValue = privateValue || {};
