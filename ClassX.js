@@ -37,7 +37,7 @@
                 newClass.private || (newClass.private = {});
                 ObjectX.extend(newClass.private,privateValue);
             },
-            'statics' : function(newClass, statics, own, notOverridden){
+            'statics' : function(newClass, statics, notOverridden){
                 objectEach(statics, function (k, v) {
                     if(notOverridden === true){
                         if( !(k in newClass) ){
@@ -46,7 +46,7 @@
                     }else{
                         newClass[ k ] = v;
                     }
-                },own);
+                });
             }
         },
         log = function(value){
@@ -213,15 +213,8 @@
     }
 
     function objectEach(obj, fn , own, scope  ) {
-        if(own === true){
-            var keys = Object.keys(obj);
-            keys.forEach(function(x){
-                fn.call( scope, x, obj[x])
-            })
-        }else{
-            for (var x in obj)
-                fn.call( scope, x, obj[x] );
-        }
+        for (var x in obj)
+            fn.call( scope, x, obj[x] );
     }
     if(module && module.exports){
         module.exports = ObjectX;
